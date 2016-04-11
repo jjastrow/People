@@ -3,7 +3,7 @@ import java.io.FileWriter;
 import java.util.*;
 
 /**
- * Created by zach on 10/19/15.
+ * Created by Jastrow on 4/11/16.
  * eg:
  *  Russia=[Carol Flores from Russia, Kenneth Parker from Russia, Roger Sanchez from Russia, Irene Turner from Russia,
  *  Pamela Moore from Russia, Marilyn Carr from Russia, Beverly Martinez from Russia, Carol Stewart from Russia,
