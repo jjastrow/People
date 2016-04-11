@@ -1,11 +1,6 @@
-import jodd.json.JsonSerializer;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -18,16 +13,6 @@ public class Person implements Comparable {
     private String email;
     private String country;
     private String ip_address;
-
-    static void saveTeamList(HashMap<String, ArrayList<Person>> teamLeadList) throws IOException {
-        JsonSerializer s = new JsonSerializer();
-        String json = s.include("*").serialize(teamLeadList);
-
-        File f = new File("peopleMap.json");
-        FileWriter fw = new FileWriter(f);
-        fw.write(json);
-        fw.close();
-    }
 
     static ArrayList<Person> loadPersons() throws FileNotFoundException {
         File f = new File("people.csv");
@@ -49,8 +34,8 @@ public class Person implements Comparable {
     @Override
     public int compareTo(Object o) {
         Person p = (Person) o;
-        return this.country.compareTo(p.country);
-    }
+        return this.getCountry().compareTo(p.getCountry());
+      }
 
     public Person(){};
 

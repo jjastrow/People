@@ -1,5 +1,8 @@
+import jodd.json.JsonSerializer;
+
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -12,12 +15,12 @@ import java.util.*;
  *  Evelyn Morrison from Russia, Bonnie Harrison from Russia, Jimmy Frazier from Russia, Anthony Richardson from Russia]
  */
 public class People {
+    static Map<String, ArrayList<Person>> teamLeadList;
     public static void main(String[] args) throws Exception {
 
         // Map of Person's full name to list of people
         // ie;   Joe -> [Joe, Charlie, Bob]   Joe is the team lead for these people.
         // The first person on the team is the lead.
-        HashMap<String, ArrayList<Person>> teamLeadList;
 
         // 1. Read all people in from CSV file
         ArrayList<Person> people = Person.loadPersons();
@@ -28,10 +31,31 @@ public class People {
         teamLeadList = processByCountry(people);
         System.out.println(teamLeadList);
 
-        // 3. write out results to json formatted file
-        Person.saveTeamList(teamLeadList);
+        // 3. sort each country's list by Last name, First name
+        for ( Map.Entry<String, ArrayList<Person>> entry : teamLeadList.entrySet() ) {
+            Collections.sort(entry.getValue(), new Comparator<Person>() {
+                public int compare(Person t, Person t1) {
+                    int lastNameCompare = t.getLast_name().compareTo(t1.getLast_name());
+                    if (lastNameCompare == 0) {
+                        return t.getFirst_name().compareTo(t1.getFirst_name());
+                    }else return lastNameCompare;
+                }
+            });
+        }
+
+        // 4. write out results to json formatted file
+        saveTeamList();
     }
 
+    static void saveTeamList() throws IOException {
+        JsonSerializer s = new JsonSerializer();
+        String json = s.include("*").serialize(teamLeadList);
+
+        File f = new File("peopleMap.json");
+        FileWriter fw = new FileWriter(f);
+        fw.write(json);
+        fw.close();
+    }
 
     /** read people file and sort by country
      * for each person grab the country and that person to a new country specific list if it matches the previous
